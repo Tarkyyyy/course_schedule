@@ -57,54 +57,51 @@ root = Tk()
 def create():   #创建Label
     global courseList
     global labelList
-    # if t.tm_wday == 5:
-    #     n = 7
-    # else:
-    #     n = 10
     for i in range(10):
-        labelList[i] = Label(root,text=courseList[i],font=('微软雅黑',17,'bold'),relief=GROOVE,width=8)
+        labelList[i] = Label(root,text=courseList[i],font=('微软雅黑',24,'bold'),relief=GROOVE,width=8)
         labelList[i].grid(column = 1,row=i)
 def dynamic_sh(p):  #实时课程显示
     n = switch_course(p)
     if n % 2 != 0:  #上课期间
-        lb2 = Label(root,text=courseList[int((n-1)/2)],font=('微软雅黑',18,'bold'))
+        lb2 = Label(root,text=courseList[int((n-1)/2)],font=('微软雅黑',24,'bold'),width=5)
         lb2.grid(column=0,row=4)
-        lb1 = Label(root,text='now:',width=8,anchor=W)
+        lb1 = Label(root,text='now:',font=('微软雅黑',14,'bold'),width=8,anchor=W)
         lb1.grid(column=0,row=3)
     else:   #课间期间
-        lb2 = Label(root,text=courseList[int(n/2)],font=('微软雅黑',18,'bold'))
+        lb2 = Label(root,text=courseList[int(n/2)],font=('微软雅黑',24,'bold'),width=5)
         lb2.grid(column=0,row=4)
-        lb1 = Label(root,text='next:',width=8,anchor=W)
+        lb1 = Label(root,text='next:',font=('微软雅黑',14,'bold'),width=8,anchor=W)
         lb1.grid(column=0,row=3)
 def course_sh(p):   #更改Label背景色
     n = switch_course(p)
     if n % 2 != 0:
-        labelList[int((n-1)/2)].config(bg='green')
+        labelList[int((n-1)/2)].config(bg='#78E370')
     elif n != 20:
-        labelList[int(n/2)].config(bg='yellow')
+        labelList[int(n/2)].config(bg='#ffdb33')
 def refresh():  #循环刷新
     GetTime()
     create()
     n = 0
     if t.tm_hour < 12:
         n = (pp1[switch_course(0)]-now_time)*1000 - 4001
-        print(n)
+        # print(n)
         dynamic_sh(0)
         course_sh(0)
-        print(switch_course(0))
-        if (switch_course(0) % 2 != 0 and n > 4000) or (switch_course(0)  == 10 and n > 4000) or (switch_course(0) == 0 and n > 4000):
+        # print(switch_course(0))
+        # if (switch_course(0) % 2 != 0 and n > 4000) or (switch_course(0)  == 10 and n > 4000) or (switch_course(0) == 0 and n > 4000):
+        if  n > 4000:
             root.update()
             root.after(n,refresh)
         else:
             root.update()
             root.after(5000,refresh)
     else:
-        print(switch_course(1))
+        # print(switch_course(1))
         n = (pp2[switch_course(1)-10]-now_time)*1000 - 4001
-        print(n)
+        # print(n)
         dynamic_sh(1)
         course_sh(1)
-        if (switch_course(1) % 2 != 0 and n > 4000) or (switch_course(1)  == 10 and n > 4000) or (switch_course(1) == 20 and n > 4000):
+        if n > 4000:
             root.update()
             root.after(n,refresh)
         else:
@@ -115,22 +112,25 @@ def refresh2(): #手动刷新
     GetTime()
     GetCourse()
     GetTable()
-    print(courseList)
+    # print(courseList)
     refresh()  
     
-ctypes.windll.shcore.SetProcessDpiAwareness(1)  #告诉操作系统使用程序自身的dpi适配
-ScaleFactor=ctypes.windll.shcore.GetScaleFactorForDevice(0) #获取屏幕的缩放因子
-root.tk.call('tk', 'scaling', ScaleFactor/75)   #设置程序缩放
+# ctypes.windll.shcore.SetProcessDpiAwareness(1)  #告诉操作系统使用程序自身的dpi适配
+# ScaleFactor=ctypes.windll.shcore.GetScaleFactorForDevice(0) #获取屏幕的缩放因子
+# root.tk.call('tk', 'scaling', ScaleFactor/75)   #设置程序缩放
 
-root.geometry("220x440+1688+12")
+root.geometry("275x480+1633+12")
+root.config(bg="#f4f4f4")
 GetCourse()  
 GetTable() 
-print(pp1)
+# print(pp1)
 create()
 root.after(100,refresh)
-print(courseList)
+# print(courseList)
 bt1 = Button(root,text='刷新',command=refresh2)
-bt1.grid(column=0,row=9)
+bt1.grid(column=0,row=8)
+lb1 = Label(root,text='Designed For Class14')
+lb1.grid(column=0,row=9)
 root.overrideredirect(True)
 # root.attributes('-topmost', True)
 root.mainloop()
